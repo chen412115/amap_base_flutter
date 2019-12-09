@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import io.flutter.plugin.common.MethodChannel
@@ -43,15 +44,28 @@ class AMapBaseLocationPlugin {
                                 permissionRequestCode = methodCall.hashCode()
                                 methodResult = result
 
-                                ActivityCompat.requestPermissions(
-                                        registrar.activity(),
-                                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                                Manifest.permission.READ_PHONE_STATE),
-                                        permissionRequestCode
-                                )
+                                if (Build.VERSION.SDK_INT >= 29){
+                                    ActivityCompat.requestPermissions(
+                                            registrar.activity(),
+                                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
+                                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                                    "android.permission.ACCESS_BACKGROUND_LOCATION",
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                    Manifest.permission.READ_PHONE_STATE),
+                                            permissionRequestCode
+                                    )
+                                }else{
+                                    ActivityCompat.requestPermissions(
+                                            registrar.activity(),
+                                            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,
+                                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                    Manifest.permission.READ_PHONE_STATE),
+                                            permissionRequestCode
+                                    )
+                                }
                                 registrar.addRequestPermissionsResultListener { code, _, grantResults ->
                                     if (code == permissionRequestCode) {
                                         methodResult?.success(grantResults.all { it == PackageManager.PERMISSION_GRANTED })
