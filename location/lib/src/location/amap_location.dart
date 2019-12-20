@@ -25,6 +25,7 @@ class AMapLocation {
 
   /// 初始化
   Future init() {
+    print('调用高德地图初始化');
     return _locationChannel.invokeMethod('location#init');
   }
 
