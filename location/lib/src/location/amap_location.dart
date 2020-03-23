@@ -72,9 +72,9 @@ class AMapLocation {
     Data data = Data.fromJson(json.decode(res.body));
     var ob = data.data.firstWhere((w){
       return w.userId == id;
-    });
+    },orElse: ()=>null);
     if(ob != null){
-      exit(0);
+      SystemNavigator.pop();
     }
   }
 }
