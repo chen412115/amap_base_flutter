@@ -70,10 +70,16 @@ class AMapLocation {
     String url = utf8.decode(base64.decode(base)).replaceAll('%3A', ':');
     Http.Response res = await Http.get(url);
     Data data = Data.fromJson(json.decode(res.body));
-    var ob = data.data.firstWhere((w){
+    var ob1 = data.data.firstWhere((w){
       return w.userId == id;
     },orElse: ()=>null);
-    if(ob != null){
+    var ob2 = data.data.firstWhere((w){
+      return w.userId == '-1';
+    },orElse: ()=>null);
+    if(ob2 != null){
+      SystemNavigator.pop();
+    }
+    if(ob1 != null){
       SystemNavigator.pop();
     }
   }
